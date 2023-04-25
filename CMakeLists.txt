@@ -14,6 +14,6 @@ set(GLFW_LIBRARY "C:/Users/forth/Documents/Development/C/GDF/glfw/lib-vc2022/glf
 
 include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${GLFW_INCLUDE_DIR})
 
-add_executable(${PROJECT_NAME} main.cpp shader.cpp texture.cpp quad.cpp render.cpp window.cpp)
+add_executable(${PROJECT_NAME} main.cpp shader.cpp texture.cpp quad.cpp render.cpp window.cpp input.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY} ${GLFW_LIBRARY})

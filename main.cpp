@@ -6,6 +6,7 @@
 #include "quad.h"
 #include "render.h"
 #include "window.h"
+#include "input.h"
 
 void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint textures[], GLuint framebuffers[], int width, int height) {
     int currentTexture = 0;
@@ -50,6 +51,9 @@ int main() {
     if (!window) {
         return -1;
     }
+
+    // Set up input callbacks
+    setupInputCallbacks(window);
 
     GLuint shaderProgram = createShaderProgram("vertex_shader.vert", "game_of_life.frag");
     GLuint VBO, EBO, VAO;
