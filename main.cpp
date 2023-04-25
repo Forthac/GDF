@@ -32,6 +32,7 @@ GLFWwindow* initializeWindow(int width, int height) {
         return nullptr;
     }
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // Enable VSync
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -72,8 +73,8 @@ int main() {
     GLuint textures[2];
     GLuint framebuffers[2];
     GLuint initialState;
-    int width = 512;
-    int height = 512;
+    int width = 1280;
+    int height = 768;
     float aliveProbability = 0.1;
     CallbackData callbackData;
     callbackData.windowWidth = width;
