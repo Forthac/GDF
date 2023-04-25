@@ -11,7 +11,7 @@ out vec4 fragColor;
 
 int getNeighborState(ivec2 coord) {
     ivec2 wrappedCoord = clamp(coord, ivec2(0), ivec2(textureSize) - 1);
-    return int(texelFetch(inputTexture, wrappedCoord, 0).r + 0.5);
+    return int(texelFetch(inputTexture, wrappedCoord, 0).r > 0.5);
 }
 
 void main() {
