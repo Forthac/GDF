@@ -17,8 +17,13 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         // Add more key handling logic here
     }
 }
-
+void scrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
+    CallbackData* callbackData = static_cast<CallbackData*>(glfwGetWindowUserPointer(window));
+    callbackData->scaleX *= (1.0f + 0.1f * yOffset);
+    callbackData->scaleY *= (1.0f + 0.1f * yOffset);
+}
 void setupInputCallbacks(GLFWwindow* window) {
     glfwSetKeyCallback(window, keyCallback);
+    glfwSetScrollCallback(window, scrollCallback);
     // Register other input callbacks here, e.g., mouse button, cursor position, etc.
 }
