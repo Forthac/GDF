@@ -45,32 +45,59 @@ void renderToScreen(GLuint shaderProgram, GLuint texture, GLuint VAO, int width,
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
-
-int main() {
+GLFWwindow* initializeWindow() {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
-        return -1;
+        return nullptr;
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     GLFWwindow* window = glfwCreateWindow(800, 600, "GDF", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
-        return -1;
+        return nullptr;
     }
     glfwMakeContextCurrent(window);
+
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW" << std::endl;
         glfwTerminate();
+        return nullptr;
+    }
+
+    return window;
+}
+void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint textures[], GLuint framebuffers[], int width, int height) {
+    int currentTexture = 0;
+
+    while (!glfwWindowShouldClose(window)) {
+        renderToTexture(framebuffers[1 - currentTexture], shaderProgram, textures[currentTexture], VAO, width, height);
+        currentTexture = 1 - currentTexture;
+        renderToScreen(shaderProgram, textures[currentTexture], VAO, 800, 600);
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+}
+void cleanup(GLuint VAO, GLuint VBO, GLuint EBO, GLuint shaderProgram, GLuint textures[], GLuint framebuffers[]) {
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+    glDeleteProgram(shaderProgram);
+    glDeleteTextures(2, textures);
+    glDeleteFramebuffers(2, framebuffers);
+}
+int main() {
+    GLFWwindow* window = initializeWindow();
+    if (!window) {
         return -1;
     }
-    
-    GLuint shaderProgram = createShaderProgram("vertex_shader.vert", "game_of_life.frag");
 
+    GLuint shaderProgram = createShaderProgram("vertex_shader.vert", "game_of_life.frag");
     GLuint VBO, EBO, VAO;
     VAO = createQuadVAO(VBO, EBO);
 
@@ -80,35 +107,10 @@ int main() {
     GLuint initialState;
     initialState = createSimulationDoubleBuffer("initial_state.bmp", textures, framebuffers, width, height);
 
-    int currentTexture = 0;
+    runMainLoop(window, shaderProgram, VAO, textures, framebuffers, width, height);
 
-    // Set the textureSize uniform
-    GLint textureSizeLocation = glGetUniformLocation(shaderProgram, "textureSize");
-    glUniform2f(textureSizeLocation, (float)width, (float)height);
-
-
-    while (!glfwWindowShouldClose(window)) {
-        // Render to the next state texture
-        renderToTexture(framebuffers[1 - currentTexture], shaderProgram, textures[currentTexture], VAO, width, height);
-
-        // Swap current and next state textures
-        currentTexture = 1 - currentTexture;
-
-        // Render the current state texture to the default framebuffer
-        renderToScreen(shaderProgram, textures[currentTexture], VAO, 800, 600);
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-
-    // Cleanup
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteProgram(shaderProgram);
-    glDeleteTextures(2, textures);
-    glDeleteFramebuffers(2, framebuffers);
-
+    cleanup(VAO, VBO, EBO, shaderProgram, textures, framebuffers);
     glfwTerminate();
+
     return 0;
 }
