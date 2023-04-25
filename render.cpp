@@ -33,5 +33,11 @@ void renderToScreen(GLFWwindow* window, GLuint shaderProgram, GLuint texture, GL
     CallbackData* callbackData = static_cast<CallbackData*>(glfwGetWindowUserPointer(window));
     float scaleX = callbackData->scaleX;
     float scaleY = callbackData->scaleY;
+
+    // Use the previous texture when the simulation is paused
+    if (callbackData->isPaused && callbackData->prevTexture != -1) {
+        texture = callbackData->textures[callbackData->prevTexture];
+    }
+
     render(0, shaderProgram, texture, VAO, width, height, scaleX, scaleY, clearColor);
 }

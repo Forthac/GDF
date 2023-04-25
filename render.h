@@ -12,6 +12,8 @@ struct CallbackData {
     GLuint* framebuffers;
     float scaleX;
     float scaleY;
+    bool isPaused;
+    int prevTexture;
 };
 
 void updateUniforms(GLuint shaderProgram, int width, int height, float scaleX, float scaleY);

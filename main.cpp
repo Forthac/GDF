@@ -15,13 +15,19 @@ void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint te
         CallbackData* callbackData = static_cast<CallbackData*>(glfwGetWindowUserPointer(window));
         int width = callbackData->windowWidth;
         int height = callbackData->windowHeight;
-        renderToTexture(framebuffers[1 - currentTexture], shaderProgram, textures[currentTexture], VAO, width, height);
-        currentTexture = 1 - currentTexture;
+
+        if (!callbackData->isPaused) {
+            renderToTexture(framebuffers[1 - currentTexture], shaderProgram, textures[currentTexture], VAO, width, height);
+            callbackData->prevTexture = currentTexture;
+            currentTexture = 1 - currentTexture;
+        }
+
         renderToScreen(window, shaderProgram, textures[currentTexture], VAO, width, height);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 }
+
 void cleanup(GLuint VAO, GLuint VBO, GLuint EBO, GLuint shaderProgram, GLuint textures[], GLuint framebuffers[]) {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
@@ -46,6 +52,8 @@ int main() {
     callbackData.framebuffers = framebuffers;
     callbackData.scaleX = 1.0f;
     callbackData.scaleY = 1.0f;
+    callbackData.isPaused = false;
+    callbackData.prevTexture = -1;
 
     GLFWwindow* window = initializeWindow(width, height);
     if (!window) {
