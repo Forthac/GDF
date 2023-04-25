@@ -97,11 +97,16 @@ int main() {
     GLuint VBO, EBO, VAO;
     VAO = createQuadVAO(VBO, EBO);
 
-    int width, height;
+    
     GLuint textures[2];
     GLuint framebuffers[2];
     GLuint initialState;
-    initialState = createSimulationDoubleBuffer("initial_state.bmp", textures, framebuffers, width, height);
+    int width = 800;
+    int height = 600;
+    float aliveProbability = 0.1;
+
+    createSimulationDoubleBuffer(createRandomInitialStateTexture, aliveProbability, textures, framebuffers, width, height);
+
 
     runMainLoop(window, shaderProgram, VAO, textures, framebuffers, width, height);
 
