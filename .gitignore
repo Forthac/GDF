@@ -3,6 +3,7 @@
 
 # CMake build artifacts
 build/
+build_release/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
