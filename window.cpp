@@ -14,7 +14,6 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     // Resize the textures and framebuffers
     resizeSimulationDoubleBuffer(callbackData->textures, callbackData->framebuffers, width, height);
 }
-
 GLFWwindow* initializeWindow(int width, int height) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;

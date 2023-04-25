@@ -7,8 +7,6 @@ void updateUniforms(GLuint shaderProgram, int width, int height, float scaleX, f
     GLint scaleLocation = glGetUniformLocation(shaderProgram, "scale");
     glUniform2f(scaleLocation, scaleX, scaleY);
 }
-
-
 void render(GLuint framebuffer, GLuint shaderProgram, GLuint texture, GLuint VAO, int width, int height, float scaleX, float scaleY, float clearColor[4]) {
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glViewport(0, 0, width, height);
@@ -26,13 +24,10 @@ void render(GLuint framebuffer, GLuint shaderProgram, GLuint texture, GLuint VAO
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
-
-
 void renderToTexture(GLuint framebuffer, GLuint shaderProgram, GLuint texture, GLuint VAO, int width, int height) {
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     render(framebuffer, shaderProgram, texture, VAO, width, height, 1.0f, 1.0f, clearColor);
 }
-
 void renderToScreen(GLFWwindow* window, GLuint shaderProgram, GLuint texture, GLuint VAO, int width, int height) {
     float clearColor[4] = {0.2f, 0.3f, 0.3f, 1.0f};
     CallbackData* callbackData = static_cast<CallbackData*>(glfwGetWindowUserPointer(window));

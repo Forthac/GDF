@@ -10,7 +10,6 @@ void checkGLError(const char* message) {
         std::cerr << "OpenGL error (" << message << "): " << error << std::endl;
     }
 }
-
 void resizeSimulationDoubleBuffer(GLuint textures[2], GLuint framebuffers[2], int newWidth, int newHeight) {
     for (int i = 0; i < 2; ++i) {
         glBindTexture(GL_TEXTURE_2D, textures[i]);
@@ -87,7 +86,6 @@ GLuint createRandomInitialStateTexture(int width, int height, float aliveProbabi
 
     return texture;
 }
-
 GLuint loadTextureFromFile(const char* filename, int& width, int& height) {
     int channels;
     unsigned char *data = stbi_load(filename, &width, &height, &channels, STBI_rgb);
@@ -131,7 +129,6 @@ GLuint createSimulationDoubleBuffer(const char *filename, GLuint textures[2], GL
 
     return textures[0];
 }
-
 GLuint createSimulationDoubleBuffer(TextureGeneratorFunc textureGenerator, float aliveProbability, GLuint textures[2], GLuint framebuffers[2], int &width, int &height) {
     glGenTextures(2, textures);
     glGenFramebuffers(2, framebuffers);
