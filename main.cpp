@@ -10,11 +10,11 @@ void updateUniforms(GLuint shaderProgram, int width, int height) {
     glUniform2f(textureSizeLocation, (float)width, (float)height);
 }
 
-void renderToTexture(GLuint framebuffer, GLuint shaderProgram, GLuint texture, GLuint VAO, int width, int height) {
+void render(GLuint framebuffer, GLuint shaderProgram, GLuint texture, GLuint VAO, int width, int height, float clearColor[4]) {
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glViewport(0, 0, width, height);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(shaderProgram);
@@ -26,25 +26,18 @@ void renderToTexture(GLuint framebuffer, GLuint shaderProgram, GLuint texture, G
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+}
+
+void renderToTexture(GLuint framebuffer, GLuint shaderProgram, GLuint texture, GLuint VAO, int width, int height) {
+    float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    render(framebuffer, shaderProgram, texture, VAO, width, height, clearColor);
 }
 
 void renderToScreen(GLuint shaderProgram, GLuint texture, GLuint VAO, int width, int height) {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, width, height);
-
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glUseProgram(shaderProgram);
-    updateUniforms(shaderProgram, width, height);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    float clearColor[4] = {0.2f, 0.3f, 0.3f, 1.0f};
+    render(0, shaderProgram, texture, VAO, width, height, clearColor);
 }
+
 GLFWwindow* initializeWindow() {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -72,6 +65,7 @@ GLFWwindow* initializeWindow() {
 
     return window;
 }
+
 void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint textures[], GLuint framebuffers[], int width, int height) {
     int currentTexture = 0;
 
@@ -83,6 +77,7 @@ void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint te
         glfwPollEvents();
     }
 }
+
 void cleanup(GLuint VAO, GLuint VBO, GLuint EBO, GLuint shaderProgram, GLuint textures[], GLuint framebuffers[]) {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
@@ -91,6 +86,7 @@ void cleanup(GLuint VAO, GLuint VBO, GLuint EBO, GLuint shaderProgram, GLuint te
     glDeleteTextures(2, textures);
     glDeleteFramebuffers(2, framebuffers);
 }
+
 int main() {
     GLFWwindow* window = initializeWindow();
     if (!window) {
