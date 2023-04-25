@@ -17,7 +17,7 @@ void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint te
         int height = callbackData->windowHeight;
 
         if (!callbackData->isPaused || callbackData->advanceOneFrame) {
-            renderToTexture(framebuffers[1 - currentTexture], shaderProgram, textures[currentTexture], VAO, width, height);
+            renderToTexture(window, framebuffers[1 - currentTexture], shaderProgram, textures[currentTexture], VAO, width, height);
             currentTexture = 1 - currentTexture;
             if (callbackData->advanceOneFrame) {
                 callbackData->advanceOneFrame = false;

@@ -13,6 +13,23 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         } else if (key == GLFW_KEY_ENTER && callbackData->isPaused) {
             // Advance one frame if paused
             callbackData->advanceOneFrame = true;
+        } else {
+            float panSpeed = 0.01f;
+            switch (key) {
+                case GLFW_KEY_UP:
+                    callbackData->panY -= panSpeed;
+                    break;
+                case GLFW_KEY_DOWN:
+                    callbackData->panY += panSpeed;
+                    break;
+                case GLFW_KEY_LEFT:
+                    callbackData->panX += panSpeed;
+                    break;
+                case GLFW_KEY_RIGHT:
+                    callbackData->panX -= panSpeed;
+                    break;
+            }
+            std::cout << "PanX: " << callbackData->panX << ", PanY: " << callbackData->panY << std::endl;
         }
         // Add more key handling logic here
     }
