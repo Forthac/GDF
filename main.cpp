@@ -1,6 +1,9 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "shader.h"
 #include "texture.h"
 #include "quad.h"
@@ -41,8 +44,8 @@ int main() {
     GLuint textures[2];
     GLuint framebuffers[2];
     GLuint initialState;
-    int width = 1280;
-    int height = 768;
+    int width = 3840*8*2;
+    int height = 2160*8*2;
     float aliveProbability = 0.1;
     CallbackData callbackData;
     callbackData.windowWidth = width;
@@ -68,7 +71,6 @@ int main() {
     GLuint VBO, EBO, VAO;
     VAO = createQuadVAO(VBO, EBO);
 
-    
     createSimulationDoubleBuffer(createRandomInitialStateTexture, aliveProbability, textures, framebuffers, width, height);
 
     glfwSetWindowUserPointer(window, &callbackData);

@@ -7,12 +7,13 @@
             "command": "cmake",
             "args": [
                 "-G",
-                "Visual Studio 16 2019", // Use the appropriate generator for your version of Visual Studio
+                "Visual Studio 16 2019",
                 "-DCMAKE_BUILD_TYPE=Debug",
+                "-Dglm_DIR=C:/Users/forth/Documents/Development/C/GDF/glm/cmake/glm",
                 "-B",
                 "${workspaceFolder}/build",
                 "${workspaceFolder}"
-            ],
+            ],            
             "group": "build",
             "problemMatcher": [],
             "presentation": {
