@@ -29,8 +29,6 @@ void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint te
         glfwPollEvents();
     }
 }
-
-
 void cleanup(GLuint VAO, GLuint VBO, GLuint EBO, GLuint shaderProgram, GLuint textures[], GLuint framebuffers[]) {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
