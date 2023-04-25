@@ -1,7 +1,5 @@
 #include "render.h"
 
-
-
 void updateUniforms(GLuint shaderProgram, int width, int height, float scaleX, float scaleY) {
     GLint textureSizeLocation = glGetUniformLocation(shaderProgram, "textureSize");
     glUniform2f(textureSizeLocation, (float)width, (float)height);
