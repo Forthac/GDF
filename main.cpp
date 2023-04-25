@@ -16,10 +16,12 @@ void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint te
         int width = callbackData->windowWidth;
         int height = callbackData->windowHeight;
 
-        if (!callbackData->isPaused) {
+        if (!callbackData->isPaused || callbackData->advanceOneFrame) {
             renderToTexture(framebuffers[1 - currentTexture], shaderProgram, textures[currentTexture], VAO, width, height);
-            callbackData->prevTexture = currentTexture;
             currentTexture = 1 - currentTexture;
+            if (callbackData->advanceOneFrame) {
+                callbackData->advanceOneFrame = false;
+            }
         }
 
         renderToScreen(window, shaderProgram, textures[currentTexture], VAO, width, height);
@@ -27,6 +29,7 @@ void runMainLoop(GLFWwindow* window, GLuint shaderProgram, GLuint VAO, GLuint te
         glfwPollEvents();
     }
 }
+
 
 void cleanup(GLuint VAO, GLuint VBO, GLuint EBO, GLuint shaderProgram, GLuint textures[], GLuint framebuffers[]) {
     glDeleteVertexArrays(1, &VAO);
