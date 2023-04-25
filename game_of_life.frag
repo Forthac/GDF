@@ -2,8 +2,6 @@
 
 uniform sampler2D inputTexture;
 uniform vec2 textureSize;
-uniform float deltaTime;
-uniform float time;
 
 in vec2 fragTexCoord;
 
@@ -15,28 +13,23 @@ int getNeighborState(ivec2 coord) {
 }
 
 void main() {
-    ivec2 coord = ivec2(fragTexCoord * textureSize);
-    int currentState = getNeighborState(coord);
+    ivec2 texCoord = ivec2(fragTexCoord * textureSize);
+    int currentState = getNeighborState(texCoord);
+    int numNeighbors = 0;
 
-    int liveNeighbors = 0;
     for (int y = -1; y <= 1; ++y) {
         for (int x = -1; x <= 1; ++x) {
-            if (x != 0 || y != 0) {
-                liveNeighbors += getNeighborState(coord + ivec2(x, y));
-            }
+            if (x == 0 && y == 0) continue;
+            numNeighbors += getNeighborState(texCoord + ivec2(x, y));
         }
     }
 
     int nextState = currentState;
-    if (currentState == 1) {
-        if (liveNeighbors < 2 || liveNeighbors > 3) {
-            nextState = 0;
-        }
-    } else {
-        if (liveNeighbors == 3) {
-            nextState = 1;
-        }
+    if (currentState == 1 && (numNeighbors < 2 || numNeighbors > 3)) {
+        nextState = 0;
+    } else if (currentState == 0 && numNeighbors == 3) {
+        nextState = 1;
     }
 
-    fragColor = vec4(vec3(float(nextState)), 1.0);
+    fragColor = nextState == 1 ? vec4(1.0, 1.0, 1.0, 1.0) : vec4(0.0, 0.0, 0.0, 1.0);
 }
