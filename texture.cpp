@@ -4,6 +4,26 @@
 #include "stb_image.h"
 #include "texture.h"
 
+void resizeSimulationDoubleBuffer(GLuint textures[2], GLuint framebuffers[2], int newWidth, int newHeight) {
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, newWidth, newHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, newWidth, newHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    for (int i = 0; i < 2; ++i) {
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[i]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[i], 0);
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (status != GL_FRAMEBUFFER_COMPLETE) {
+            std::cerr << "Framebuffer " << i << " is not complete: " << status << std::endl;
+        }
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 GLuint createEmptyTexture(int width, int height) {
     GLuint texture;
     glGenTextures(1, &texture);
