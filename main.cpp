@@ -16,7 +16,7 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     callbackData->scaleY = static_cast<float>(height) / static_cast<float>(callbackData->originalHeight);
 
     // Resize the textures and framebuffers
-    resizeTextures(callbackData->textures, callbackData->framebuffers, width, height);
+    resizeSimulationDoubleBuffer(callbackData->textures, callbackData->framebuffers, width, height);
 }
 
 GLFWwindow* initializeWindow(int width, int height) {
@@ -28,6 +28,7 @@ GLFWwindow* initializeWindow(int width, int height) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     GLFWwindow* window = glfwCreateWindow(width, height, "GDF", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
