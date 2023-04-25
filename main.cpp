@@ -14,6 +14,9 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
     callbackData->windowHeight = height;
     callbackData->scaleX = static_cast<float>(width) / static_cast<float>(callbackData->originalWidth);
     callbackData->scaleY = static_cast<float>(height) / static_cast<float>(callbackData->originalHeight);
+
+    // Resize the textures and framebuffers
+    resizeTextures(callbackData->textures, callbackData->framebuffers, width, height);
 }
 
 GLFWwindow* initializeWindow(int width, int height) {
@@ -40,7 +43,7 @@ GLFWwindow* initializeWindow(int width, int height) {
         glfwTerminate();
         return nullptr;
     }
-
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     return window;
 }
 

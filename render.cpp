@@ -3,7 +3,19 @@
 void resizeTextures(GLuint textures[2], GLuint framebuffers[2], int newWidth, int newHeight) {
     for (int i = 0; i < 2; ++i) {
         glBindTexture(GL_TEXTURE_2D, textures[i]);
+
+        // Get the current texture data
+        GLint oldWidth, oldHeight;
+        glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &oldWidth);
+        glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &oldHeight);
+        std::vector<GLubyte> oldTextureData(oldWidth * oldHeight * 3);
+        glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, oldTextureData.data());
+
+        // Resize the texture
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, newWidth, newHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+        // Upload the old texture data to the new resized texture
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, oldWidth, oldHeight, GL_RGB, GL_UNSIGNED_BYTE, oldTextureData.data());
 
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[i]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[i], 0);
